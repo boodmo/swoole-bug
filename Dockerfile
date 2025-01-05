@@ -63,7 +63,7 @@ RUN set -e -u -x \
         /tmp/*
 
 COPY docker-entrypoint.sh /entrypoint.sh
-
+COPY opcache.ini /usr/local/etc/php/conf.d/101-opcache.ini
 WORKDIR /app
 
 COPY test.php /app/test.php

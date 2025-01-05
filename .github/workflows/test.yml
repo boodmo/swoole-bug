@@ -88,5 +88,5 @@ jobs:
 
       - name: Segfault test # docker run --rm -t ${{ env.DOCKER_IMAGE }}
         run: |
-          docker run --rm -t -v ./:/app quay.io/boodmo/marketplace-platform:debug3 php test.php
+          docker run --rm -t ${{ env.DOCKER_IMAGE }}
           
