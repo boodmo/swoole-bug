@@ -99,8 +99,8 @@ RUN set -e -u -x \
     #&& phpize && ./configure --with-php-config=/usr/local/bin/php-config --enable-reader \
     #&& make && make install \
     #&& echo "extension=xlswriter.so" > /usr/local/etc/php/conf.d/docker-php-ext-xlswriter.ini \
-    && pecl install xlswriter \
-    && docker-php-ext-enable xlswriter \
+    #&& pecl install xlswriter \
+    #&& docker-php-ext-enable xlswriter \
     # Clean up
     && apk del --no-progress BUILD_DEPS \
         BUILD_DEPS_PHP_AMQP \
