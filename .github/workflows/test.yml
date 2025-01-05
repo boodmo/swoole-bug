@@ -1,0 +1,86 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  CI_DOCKER_IMAGE: "test-image"
+
+jobs:
+  build:
+    runs-on: big-runner
+    concurrency:
+      group: ci-${{ github.head_ref }}
+      cancel-in-progress: true
+    env:
+      GITHUB_RUN_ID: ${{secrets.GITHUB_RUN_ID}}
+      GITHUB_RUN_NUMBER: ${{secrets.GITHUB_RUN_NUMBER}}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      ASSETS_TOKEN: ${{ secrets.ASSETS_TOKEN }}
+      DOCKER_IMAGE: "test-image"
+    steps:
+      - name: Fix permissions
+        run: sudo chown -R $(whoami):$(whoami) $RUNNER_WORKSPACE || true
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - uses: actions/cache@v4
+        with:
+          path: /tmp/.composer/cache
+          key: ${{ runner.os }}-composer
+          restore-keys: |
+            ${{ runner.os }}-composer-
+
+      - name: Build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: ${{ env.DOCKER_IMAGE }}:latest
+          build-args: |
+            GITHUB_OAUTH_TOKEN=${{ env.ASSETS_TOKEN }}
+          allow: security.insecure
+          outputs: type=docker,dest=/tmp/${{ env.DOCKER_IMAGE }}.tar
+          cache-from: type=gha, scope=${{ github.workflow }}
+          cache-to: type=gha, mode=max, scope=${{ github.workflow }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.DOCKER_IMAGE }}
+          path: /tmp/${{ env.DOCKER_IMAGE }}.tar
+          retention-days: 1
+
+  test:
+    name: API functional tests
+    runs-on: big-runner
+    # if: github.head_ref == 'develop'
+    needs: build
+    env:
+      DOCKER_IMAGE: "test-image"
+    steps:
+      - name: Fix permissions
+        run: sudo chown -R $(whoami):$(whoami) $RUNNER_WORKSPACE || true
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Download artifact docker image
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.DOCKER_IMAGE }}
+          path: /tmp
+      - name: Load docker image
+        run: |
+          docker load --input /tmp/${{ env.DOCKER_IMAGE }}.tar
+
+      - name: Segfault test
+        run: |
+          docker run --rm -t ${{ env.DOCKER_IMAGE }}
