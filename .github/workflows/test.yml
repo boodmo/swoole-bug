@@ -11,9 +11,6 @@ env:
 jobs:
   build:
     runs-on: big-runner
-    concurrency:
-      group: ci-${{ github.head_ref }}
-      cancel-in-progress: true
     env:
       GITHUB_RUN_ID: ${{secrets.GITHUB_RUN_ID}}
       GITHUB_RUN_NUMBER: ${{secrets.GITHUB_RUN_NUMBER}}
