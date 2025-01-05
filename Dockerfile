@@ -50,11 +50,10 @@ RUN set -e -u -x \
     && docker-php-ext-install -j$(nproc) pcntl \
     # Install php-ext-opcache
     && docker-php-ext-install -j$(nproc) opcache \
-    && pecl install pcov \
     # Clean up
     && apk del --no-progress BUILD_DEPS \
-        BUILD_DEPS_PHP_PGSQL \
-        BUILD_DEPS_PHP_SWOOLE \
+    #    BUILD_DEPS_PHP_PGSQL \
+    #    BUILD_DEPS_PHP_SWOOLE \
     #    BUILD_DEPS_PHP_XLSWRITER \
     && rm -rf \
         /var/lib/apt/lists/* \
