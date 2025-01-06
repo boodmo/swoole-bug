@@ -6,6 +6,8 @@ RUN set -e -u -x \
     && apk update \
     && apk upgrade --available && sync \
     && apk add --no-cache --no-progress --virtual BUILD_DEPS ${PHPIZE_DEPS} linux-headers oniguruma-dev \
+    && apk add --no-cache --no-progress \
+            bash \
     # Install php-ext-opcache
     && docker-php-ext-install -j$(nproc) opcache \
     # Clean up
