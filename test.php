@@ -8,9 +8,6 @@ interface EntityManagerInterface {
 }
 class A
 {
-    public function __construct(/*private ?self $parent = null*/)
-    {
-    }
 }
 
 class EntityManager implements EntityManagerInterface {
@@ -20,7 +17,7 @@ class EntityManager implements EntityManagerInterface {
         echo "Persisting entity: " . get_class($entity) . "\n";
     }
 }
-abstract class AbstractDecorator implements EntityManagerInterface {
+/*abstract class AbstractDecorator implements EntityManagerInterface {
     protected $wrapped;
     public function persist(object $entity)
     {
@@ -30,9 +27,9 @@ abstract class AbstractDecorator implements EntityManagerInterface {
     {
         $this->wrapped = $wrapped;
     }
-}
+}*/
 
-class EntityManagerDecorator extends AbstractDecorator {
+class EntityManagerDecorator /*extends AbstractDecorator*/ implements EntityManagerInterface {
     protected object $proxy;
     protected $wrapped {
         get {
@@ -45,6 +42,10 @@ class EntityManagerDecorator extends AbstractDecorator {
 
     public function __construct(private Closure $factory)
     {
+    }
+    public function persist(object $entity)
+    {
+        $this->wrapped->persist($entity);
     }
 }
 
