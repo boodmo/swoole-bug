@@ -54,27 +54,16 @@ class EntityManager implements EntityManagerInterface {
         $this->unitOfWork->persist($entity);
     }
 }
-
-abstract class AbstractBaseDecorator implements EntityManagerInterface {
+abstract class AbstractDecorator implements EntityManagerInterface {
     protected $wrapped;
     public function persist(object $entity)
     {
         $this->wrapped->persist($entity);
     }
-}
-
-abstract class AbstractDecorator extends AbstractBaseDecorator {
-
     public function __construct(EntityManager $wrapped)
     {
         $this->wrapped = $wrapped;
     }
-
-    public function getClassMetadata(string $entityName)
-    {
-        return $this->wrapped->getClassMetadata($entityName);
-    }
-
 }
 
 class EntityManagerDecorator extends AbstractDecorator {
