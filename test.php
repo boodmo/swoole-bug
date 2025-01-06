@@ -3,9 +3,6 @@
 
 declare(strict_types=1);
 
-interface EntityManagerInterface {
-    public function persist(object $entity);
-}
 class A
 {
     public function __construct(private ?self $parent = null)
@@ -13,21 +10,13 @@ class A
     }
 }
 
-class EntityManager implements EntityManagerInterface {
-
-    //private UnitOfWork $unitOfWork;
-    public function __construct()
-    {
-        //$this->unitOfWork        = new UnitOfWork($this);
-    }
-
+class EntityManager {
     public function persist(object $entity)
     {
         echo "Persisting entity: " . get_class($entity) . "\n";
-        //$this->unitOfWork->persist($entity);
     }
 }
-abstract class AbstractDecorator implements EntityManagerInterface {
+abstract class AbstractDecorator {
     protected $wrapped;
     public function persist(object $entity)
     {
@@ -41,17 +30,10 @@ abstract class AbstractDecorator implements EntityManagerInterface {
 
 class EntityManagerDecorator extends AbstractDecorator {
     protected ArrayObject $storage;
-    /**
-     * phpcs:disable PSR2.Classes.PropertyDeclaration.ScopeMissing, PSR2.Classes.PropertyDeclaration.Multiple,
-     * phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact, WebimpressCodingStandard.Methods.LineAfter.BlankLinesAfter
-     * phpcs:disable WebimpressCodingStandard.WhiteSpace.BlankLine.BlankLine
-     * phpcs:disable SlevomatCodingStandard.Commenting.DocCommentSpacing.IncorrectLinesCountBetweenDescriptionAndAnnotations
-     * @var EntityManagerInterface
-     */
     protected $wrapped {
         get {
             $context = $this->getContext();
-            if (! isset($context[self::class]) || ! $context[self::class] instanceof EntityManagerInterface) {
+            if (! isset($context[self::class])) {
                 $context[self::class] = ($this->emCreatorFn)();
             }
             return $context[self::class];
