@@ -34,16 +34,9 @@ abstract class AbstractDecorator implements EntityManagerInterface {
 
 class EntityManagerDecorator extends AbstractDecorator {
     protected ArrayObject $storage;
-    /**
-     * phpcs:disable PSR2.Classes.PropertyDeclaration.ScopeMissing, PSR2.Classes.PropertyDeclaration.Multiple,
-     * phpcs:disable Generic.WhiteSpace.ScopeIndent.IncorrectExact, WebimpressCodingStandard.Methods.LineAfter.BlankLinesAfter
-     * phpcs:disable WebimpressCodingStandard.WhiteSpace.BlankLine.BlankLine
-     * phpcs:disable SlevomatCodingStandard.Commenting.DocCommentSpacing.IncorrectLinesCountBetweenDescriptionAndAnnotations
-     * @var EntityManagerInterface
-     */
     protected $wrapped {
         get {
-            if (! isset($this->storage[self::class]) || ! $this->storage[self::class] instanceof EntityManagerInterface) {
+            if (! isset($this->storage[self::class])) {
                 $this->storage[self::class] = ($this->emCreatorFn)();
             }
             return $this->storage[self::class];
