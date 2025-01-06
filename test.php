@@ -3,6 +3,9 @@
 
 declare(strict_types=1);
 
+interface EntityManagerInterface {
+    public function persist(object $entity);
+}
 class A
 {
     public function __construct(/*private ?self $parent = null*/)
@@ -10,14 +13,14 @@ class A
     }
 }
 
-class EntityManager  {
+class EntityManager implements EntityManagerInterface {
 
     public function persist(object $entity)
     {
         echo "Persisting entity: " . get_class($entity) . "\n";
     }
 }
-abstract class AbstractDecorator {
+abstract class AbstractDecorator implements EntityManagerInterface {
     protected $wrapped;
     public function persist(object $entity)
     {
@@ -30,19 +33,18 @@ abstract class AbstractDecorator {
 }
 
 class EntityManagerDecorator extends AbstractDecorator {
-    protected ArrayObject $storage;
+    protected object $proxy;
     protected $wrapped {
         get {
-            if (! isset($this->storage[self::class])) {
-                $this->storage[self::class] = ($this->emCreatorFn)();
+            if (!isset($this->proxy)) {
+                $this->proxy = ($this->factory)();
             }
-            return $this->storage[self::class];
+            return $this->proxy;
         }
     }
 
-    public function __construct(private Closure $emCreatorFn)
+    public function __construct(private Closure $factory)
     {
-        $this->storage = new ArrayObject();
     }
 }
 
