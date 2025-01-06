@@ -15,29 +15,12 @@ class A
 
 class UnitOfWork
 {
-    private array $identityMap = [];
-    private array $entityIdentifiers = [];
     public function __construct(private readonly EntityManagerInterface $em)
     {
     }
 
     public function persist(object $entity)
     {
-        $visited = [];
-
-        $this->doPersist($entity, $visited);
-    }
-
-    private function doPersist(object $entity, array &$visited)
-    {
-        $oid = spl_object_id($entity);
-        if (isset($visited[$oid])) {
-            return; // Prevent infinite recursion
-        }
-        $visited[$oid] = $entity; // Mark visited
-        $this->entityIdentifiers[$oid] = ['id' => random_int(1, 1000)];
-        $idHash = implode(' ', $this->entityIdentifiers[$oid]);
-        $this->identityMap[get_class($entity)][$idHash] = $entity;
         echo "Persisting entity: " . get_class($entity) . "\n";
     }
 }
