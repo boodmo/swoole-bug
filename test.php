@@ -6,14 +6,14 @@ declare(strict_types=1);
 interface EntityManagerInterface {
     public function persist(object $entity);
 }
-class EntityManager implements EntityManagerInterface {
+class EntityManager /*implements EntityManagerInterface*/ {
 
     public function persist(object $entity)
     {
         echo "Persisting entity: " . get_class($entity) . "\n";
     }
 }
-abstract class AbstractDecorator implements EntityManagerInterface {
+abstract class AbstractDecorator /*implements EntityManagerInterface*/ {
     protected $wrapped;
     public function persist(object $entity)
     {
