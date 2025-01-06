@@ -33,7 +33,7 @@ class EntityManagerDecorator extends AbstractDecorator {
     protected $wrapped {
         get {
             $context = $this->getContext();
-            if (! isset($context[self::class])) {
+            if (! isset($context[self::class]) || ! $context[self::class] instanceof EntityManager) {
                 $context[self::class] = ($this->emCreatorFn)();
             }
             return $context[self::class];
