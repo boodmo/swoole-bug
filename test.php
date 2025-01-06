@@ -8,7 +8,7 @@ interface EntityManagerInterface {
 }
 class A
 {
-    public function __construct(private ?self $parent = null)
+    public function __construct(/*private ?self $parent = null*/)
     {
     }
 }
@@ -52,6 +52,6 @@ class EntityManagerDecorator extends AbstractDecorator {
 $em = new EntityManagerDecorator(static fn() => new EntityManager());
 $a = new A();
 $em->persist($a);
-$a1 = new A($a);
+$a1 = new A();
 $em->persist($a1);
 echo "SCRIPT End!\n";
