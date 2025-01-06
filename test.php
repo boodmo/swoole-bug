@@ -15,16 +15,9 @@ class A
 
 class EntityManager implements EntityManagerInterface {
 
-    //private UnitOfWork $unitOfWork;
-    public function __construct()
-    {
-        //$this->unitOfWork        = new UnitOfWork($this);
-    }
-
     public function persist(object $entity)
     {
         echo "Persisting entity: " . get_class($entity) . "\n";
-        //$this->unitOfWork->persist($entity);
     }
 }
 abstract class AbstractDecorator implements EntityManagerInterface {
@@ -50,23 +43,16 @@ class EntityManagerDecorator extends AbstractDecorator {
      */
     protected $wrapped {
         get {
-            $context = $this->getContext();
-            if (! isset($context[self::class]) || ! $context[self::class] instanceof EntityManagerInterface) {
-                $context[self::class] = ($this->emCreatorFn)();
+            if (! isset($this->storage[self::class]) || ! $this->storage[self::class] instanceof EntityManagerInterface) {
+                $this->storage[self::class] = ($this->emCreatorFn)();
             }
-            return $context[self::class];
+            return $this->storage[self::class];
         }
     }
 
     public function __construct(private Closure $emCreatorFn)
     {
         $this->storage = new ArrayObject();
-    }
-
-    private function getContext() : ArrayObject
-    {
-        /** @psalm-var Co\Context|array */
-        return $this->storage;
     }
 }
 
