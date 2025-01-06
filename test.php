@@ -3,9 +3,6 @@
 
 declare(strict_types=1);
 
-interface EntityManagerInterface {
-    public function persist(object $entity);
-}
 class A
 {
     public function __construct(/*private ?self $parent = null*/)
@@ -13,14 +10,14 @@ class A
     }
 }
 
-class EntityManager implements EntityManagerInterface {
+class EntityManager  {
 
     public function persist(object $entity)
     {
         echo "Persisting entity: " . get_class($entity) . "\n";
     }
 }
-abstract class AbstractDecorator implements EntityManagerInterface {
+abstract class AbstractDecorator {
     protected $wrapped;
     public function persist(object $entity)
     {
