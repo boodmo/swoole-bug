@@ -5,7 +5,6 @@ declare(strict_types=1);
 
 interface EntityManagerInterface {
     public function persist(object $entity);
-    public function getClassMetadata(string $entityName);
 }
 class A
 {
@@ -36,11 +35,9 @@ class UnitOfWork
             return; // Prevent infinite recursion
         }
         $visited[$oid] = $entity; // Mark visited
-        $class = $this->em->getClassMetadata($entity::class);
-        $className = $class->className;
         $this->entityIdentifiers[$oid] = ['id' => random_int(1, 1000)];
         $idHash = implode(' ', $this->entityIdentifiers[$oid]);
-        $this->identityMap[$className][$idHash] = $entity;
+        $this->identityMap[get_class($entity)][$idHash] = $entity;
         echo "Persisting entity: " . get_class($entity) . "\n";
     }
 }
@@ -55,15 +52,6 @@ class EntityManager implements EntityManagerInterface {
     public function persist(object $entity)
     {
         $this->unitOfWork->persist($entity);
-    }
-
-    public function getClassMetadata(string $entityName)
-    {
-        return new class ($entityName) {
-            public function __construct(public string $className)
-            {
-            }
-        };
     }
 }
 
