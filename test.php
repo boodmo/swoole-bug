@@ -6,10 +6,6 @@ declare(strict_types=1);
 interface EntityManagerInterface {
     public function persist(object $entity);
 }
-class A
-{
-}
-
 class EntityManager implements EntityManagerInterface {
 
     public function persist(object $entity)
@@ -22,10 +18,6 @@ abstract class AbstractDecorator implements EntityManagerInterface {
     public function persist(object $entity)
     {
         $this->wrapped->persist($entity);
-    }
-    public function __construct(EntityManager $wrapped)
-    {
-        $this->wrapped = $wrapped;
     }
 }
 
@@ -46,8 +38,8 @@ class EntityManagerDecorator extends AbstractDecorator {
 }
 
 $em = new EntityManagerDecorator(static fn() => new EntityManager());
-$a = new A();
+$a = new stdClass();
 $em->persist($a);
-$a1 = new A();
+$a1 = new stdClass();
 $em->persist($a1);
 echo "SCRIPT End!\n";
