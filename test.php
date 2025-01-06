@@ -17,7 +17,7 @@ class EntityManager implements EntityManagerInterface {
         echo "Persisting entity: " . get_class($entity) . "\n";
     }
 }
-/*abstract class AbstractDecorator implements EntityManagerInterface {
+abstract class AbstractDecorator implements EntityManagerInterface {
     protected $wrapped;
     public function persist(object $entity)
     {
@@ -27,9 +27,9 @@ class EntityManager implements EntityManagerInterface {
     {
         $this->wrapped = $wrapped;
     }
-}*/
+}
 
-class EntityManagerDecorator /*extends AbstractDecorator*/ implements EntityManagerInterface {
+class EntityManagerDecorator extends AbstractDecorator {
     protected object $proxy;
     protected $wrapped {
         get {
@@ -42,10 +42,6 @@ class EntityManagerDecorator /*extends AbstractDecorator*/ implements EntityMana
 
     public function __construct(private Closure $factory)
     {
-    }
-    public function persist(object $entity)
-    {
-        $this->wrapped->persist($entity);
     }
 }
 
