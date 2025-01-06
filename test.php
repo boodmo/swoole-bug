@@ -13,28 +13,18 @@ class A
     }
 }
 
-class UnitOfWork
-{
-    public function __construct(private readonly EntityManagerInterface $em)
+class EntityManager implements EntityManagerInterface {
+
+    //private UnitOfWork $unitOfWork;
+    public function __construct()
     {
+        //$this->unitOfWork        = new UnitOfWork($this);
     }
 
     public function persist(object $entity)
     {
         echo "Persisting entity: " . get_class($entity) . "\n";
-    }
-}
-class EntityManager implements EntityManagerInterface {
-
-    private UnitOfWork $unitOfWork;
-    public function __construct()
-    {
-        $this->unitOfWork        = new UnitOfWork($this);
-    }
-
-    public function persist(object $entity)
-    {
-        $this->unitOfWork->persist($entity);
+        //$this->unitOfWork->persist($entity);
     }
 }
 abstract class AbstractDecorator implements EntityManagerInterface {
