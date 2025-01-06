@@ -6,30 +6,10 @@ RUN set -e -u -x \
     && apk update \
     && apk upgrade --available && sync \
     && apk add --no-cache --no-progress --virtual BUILD_DEPS ${PHPIZE_DEPS} linux-headers oniguruma-dev \
-    && apk add --no-cache --no-progress \
-        bash \
-        binutils \
-        coreutils \
-        git \
-        libltdl \
-        libpq \
-        libressl \
-        libstdc++ \
-        openssl \
-        jq \
-        openssh-client \
-        patch \
-        tini \
-        c-ares \
-        liburing \
-        liburing-dev \
     # Install php-ext-opcache
     && docker-php-ext-install -j$(nproc) opcache \
     # Clean up
     && apk del --no-progress BUILD_DEPS \
-    #    BUILD_DEPS_PHP_PGSQL \
-    #    BUILD_DEPS_PHP_SWOOLE \
-    #    BUILD_DEPS_PHP_XLSWRITER \
     && rm -rf \
         /var/lib/apt/lists/* \
         /var/cache/apk/* \
