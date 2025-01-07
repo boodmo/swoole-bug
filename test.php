@@ -3,21 +3,28 @@
 
 declare(strict_types=1);
 
-interface EntityManagerInterface {
-    public function persist(object $entity);
-}
-class EntityManager implements EntityManagerInterface {
+class EntityManager {
 
     public function persist(object $entity)
     {
         echo "Persisting entity: " . get_class($entity) . "\n";
     }
+
+    public function flush()
+    {
+        echo "Flushing\n";
+    }
 }
-abstract class AbstractDecorator implements EntityManagerInterface {
+abstract class AbstractDecorator {
     protected $wrapped;
     public function persist(object $entity)
     {
         $this->wrapped->persist($entity);
+    }
+
+    public function flush()
+    {
+        $this->wrapped->flush();
     }
 }
 
@@ -42,4 +49,5 @@ $a = new stdClass();
 $em->persist($a);
 $a1 = new stdClass();
 $em->persist($a1);
+$em->flush();
 
